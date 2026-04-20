@@ -8,11 +8,11 @@ setuptools.setup(
     name="hpxml_version_translator",
     version="1.0.1",
     author="Ben Park (NLR), Noel Merket (Pearl), Scott Horowitz (NLR)",
-    author_email="ben.park@nrel.gov",
+    author_email="ben.park@nlr.gov",
     description="Convert HPXML to newer version",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/NREL/hpxml_version_translator",
+    url="https://github.com/NatLabRockies/hpxml_version_translator",
     packages=setuptools.find_packages(include=["hpxml_version_translator"]),
     package_data={"hpxml_version_translator": ["schemas/*/*.xsd", "*.xsl"]},
     install_requires=[
