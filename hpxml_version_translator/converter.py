@@ -1,7 +1,6 @@
 from collections import defaultdict
 from copy import deepcopy
 import datetime as dt
-from deprecated import deprecated
 from lxml import etree, objectify
 import os
 import pathlib
@@ -144,11 +143,6 @@ def convert_hpxml_to_version(
                 next_file = pathlib.Path(tmpdir, f"{next_version}.xml")
                 version_translator_funcs[current_version](current_file, next_file)
             current_file = next_file
-
-
-@deprecated(version="1.0.0", reason="Use convert_hpxml_to_version instead")
-def convert_hpxml_to_3(hpxml_file: File, hpxml3_file: File) -> None:
-    convert_hpxml_to_version("3.1", hpxml_file, hpxml3_file)
 
 
 def convert_hpxml1_to_2(
