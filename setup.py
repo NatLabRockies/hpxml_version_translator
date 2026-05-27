@@ -17,7 +17,6 @@ setuptools.setup(
     package_data={"hpxml_version_translator": ["schemas/*/*.xsd", "*.xsl"]},
     install_requires=[
         "lxml",
-        "deprecated",
     ],
     extras_require={
         "dev": [

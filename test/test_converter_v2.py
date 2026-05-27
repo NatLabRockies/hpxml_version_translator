@@ -5,7 +5,6 @@ import pytest
 import tempfile
 
 from hpxml_version_translator.converter import (
-    convert_hpxml_to_3,
     convert_hpxml_to_version,
     convert_hpxml2_to_3,
 )
@@ -42,15 +41,6 @@ def test_attempt_to_use_nonexistent_version():
         match=r"HPXML version 5\.0 is not valid\. Must be one of",
     ):
         convert_hpxml_and_parse(hpxml_dir / "version_change.xml", version="5.0")
-
-
-def test_convert_hpxml_to_3():
-    with tempfile.NamedTemporaryFile("w+b") as f_out:
-        with pytest.deprecated_call():
-            convert_hpxml_to_3(hpxml_dir / "version_change.xml", f_out)
-        f_out.seek(0)
-        root = objectify.parse(f_out).getroot()
-    assert root.attrib["schemaVersion"] == "3.1"
 
 
 def test_mismatch_version():
