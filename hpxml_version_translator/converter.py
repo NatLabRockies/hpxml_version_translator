@@ -28,13 +28,12 @@ def pathobj_to_str(x: File) -> Union[str, BinaryIO]:
     """
     if isinstance(x, pathlib.PurePath):
         return str(x)
-    elif (
-        isinstance(x, str)
-        or isinstance(x, io.BufferedWriter)
-        or isinstance(x, io.BytesIO)
-    ):
+    elif isinstance(x, (str, bytes)):
         return x
-    else:  # tempfile.NamedTemporaryFile
+    elif hasattr(x, "read") or hasattr(x, "write"):
+        # Keep open file-like objects as-is; reopening by name can fail on Windows.
+        return x
+    else:
         return x.name
 
 
@@ -1761,6 +1760,17 @@ def convert_hpxml3_to_4(
             atctype = el.getparent().getparent().getparent()
             atctype.remove(atctype.Other)
             add_before(atctype, [], E.BowstringRoof())
+
+    # Handle HEScore extension for electric panels
+    for electric_panels in root.xpath(
+        "//h:Systems/h:extension/h:ElectricPanels", **xpkw
+    ):
+        extension = electric_panels.getparent()
+        systems = extension.getparent()
+        extension.remove(electric_panels)
+        if systems.xpath("count(h:extension/*)", **xpkw) == 0:
+            systems.remove(systems.extension)
+        add_before(systems, ["extension"], electric_panels)
 
     # Handle HEScore extension for DuctLocation
     for el in root.xpath("//h:Ducts/h:extension/h:DuctLocation", **xpkw):

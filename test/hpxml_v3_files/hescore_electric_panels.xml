@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HPXML xmlns="http://hpxmlonline.com/2019/10" schemaVersion="3.0">
+    <XMLTransactionHeaderInformation>
+        <XMLType></XMLType>
+        <XMLGeneratedBy></XMLGeneratedBy>
+        <CreatedDateAndTime>2026-06-25T11:41:49.968796</CreatedDateAndTime>
+        <Transaction>create</Transaction>
+    </XMLTransactionHeaderInformation>
+    <SoftwareInfo/>
+    <Building>
+        <BuildingID id="bldg1"></BuildingID>
+        <ProjectStatus>
+            <EventType>audit</EventType>
+        </ProjectStatus>
+        <BuildingDetails>
+            <Systems>
+                <extension>
+                    <ElectricPanels>
+                        <ElectricPanel>
+                            <SystemIdentifier id="panel1"/>
+                            <MaxCurrentRating>100</MaxCurrentRating>
+                        </ElectricPanel>
+                        <ElectricPanel>
+                            <SystemIdentifier id="panel2"/>
+                            <MaxCurrentRating>200</MaxCurrentRating>
+                        </ElectricPanel>
+                    </ElectricPanels>
+                </extension>
+            </Systems>
+        </BuildingDetails>
+    </Building>
+</HPXML>

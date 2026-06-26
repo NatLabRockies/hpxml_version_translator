@@ -388,6 +388,26 @@ def test_hescore_duct_location():
         assert duct4.DuctLocation == "conditioned space"
 
 
+def test_hescore_electric_panels():
+    root = convert_hpxml_and_parse(hpxml_dir / "hescore_electric_panels.xml")
+
+    systems = root.Building.BuildingDetails.Systems
+    # Electric panels should now be directly under Systems, not in extension
+    assert hasattr(systems, "ElectricPanels")
+    assert not hasattr(systems, "extension")
+    assert len(systems.ElectricPanels.ElectricPanel) == 2
+    assert (
+        systems.ElectricPanels.ElectricPanel[0].SystemIdentifier.attrib["id"]
+        == "panel1"
+    )
+    assert (
+        systems.ElectricPanels.ElectricPanel[1].SystemIdentifier.attrib["id"]
+        == "panel2"
+    )
+    assert systems.ElectricPanels.ElectricPanel[0].MaxCurrentRating == 100
+    assert systems.ElectricPanels.ElectricPanel[1].MaxCurrentRating == 200
+
+
 def test_mismatch_version():
     f_out = io.BytesIO()
     with pytest.raises(
