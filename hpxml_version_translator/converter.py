@@ -1,7 +1,6 @@
 from collections import defaultdict
 from copy import deepcopy
 import datetime as dt
-from deprecated import deprecated
 from lxml import etree, objectify
 import os
 import pathlib
@@ -145,11 +144,6 @@ def convert_hpxml_to_version(
                 next_file = pathlib.Path(tmpdir, f"{next_version}.xml")
                 version_translator_funcs[current_version](current_file, next_file)
             current_file = next_file
-
-
-@deprecated(version="1.0.0", reason="Use convert_hpxml_to_version instead")
-def convert_hpxml_to_3(hpxml_file: File, hpxml3_file: File) -> None:
-    convert_hpxml_to_version("3.1", hpxml_file, hpxml3_file)
 
 
 def convert_hpxml1_to_2(
@@ -1373,41 +1367,6 @@ def convert_hpxml2_to_3(
             frac_dist_system_eff = float(dist_system_eff) / 100
             dist_system_eff._setText(str(frac_dist_system_eff))
 
-    # Handle HEScore extension for DuctLocation
-    for el in root.xpath("//h:Ducts/h:extension/h:DuctLocation", **xpkw):
-        value = el.text
-        if value in ("under slab", "exterior wall", "roof deck"):
-            extension = el.getparent()
-            extension.remove(extension.DuctLocation)
-            ducts = extension.getparent()
-            if ducts.xpath("count(h:extension/*)", **xpkw) == 0:
-                ducts.remove(ducts.extension)
-            add_before(
-                ducts,
-                ["extension", "DuctSurfaceArea", "FractionDuctArea"],
-                E.DuctLocation(value),
-            )
-
-    # Handle HEScore extension for conditioned attic
-    for el in root.xpath("//h:Attic/h:extension/h:Conditioned", **xpkw):
-        value = el.text
-        new_value = None
-        if value is None:
-            new_value = "true"
-        elif value.lower() in ("false", "0"):
-            new_value = "false"
-        elif value.lower() in ("true", "1"):
-            new_value = "true"
-        if new_value is None:
-            continue
-        extension = el.getparent()
-        extension.remove(extension.Conditioned)
-        attic = extension.getparent()
-        if attic.xpath("count(h:extension/*)", **xpkw) == 0:
-            attic.remove(attic.extension)
-        if hasattr(attic, "AtticType") and hasattr(attic.AtticType, "Attic"):
-            add_after(attic.AtticType.Attic, ["Vented"], E.Conditioned(new_value))
-
     # Write out new file
     hpxml3_doc.write(pathobj_to_str(hpxml3_file), pretty_print=True, encoding="utf-8")
     hpxml3_schema.assertValid(hpxml3_doc)
@@ -1737,51 +1696,6 @@ def convert_hpxml3_to_4(
         else:
             raise exc.HpxmlTranslationError(
                 f"Cannot translate PipeInsulated with value '{el.text}'."
-            )
-
-    # Handle HEScore extension for ManufacturedHomeSections
-    for el in root.xpath(
-        "//h:BuildingConstruction/h:extension/h:ManufacturedHomeSections", **xpkw
-    ):
-        value = el.text
-        if value in ("single-wide", "double-wide", "triple-wide", "CrossMod"):
-            extension = el.getparent()
-            extension.remove(extension.ManufacturedHomeSections)
-            bldgconst = extension.getparent()
-            if bldgconst.xpath("count(h:extension/*)", **xpkw) == 0:
-                bldgconst.remove(bldgconst.extension)
-            add_before(bldgconst, ["extension"], E.ManufacturedHomeSections(value))
-
-    # Handle HEScore extension for belly and wing foundation
-    for el in root.xpath(
-        "//h:FoundationType/h:Other/h:extension/h:BellyAndWing", **xpkw
-    ):
-        fndtype = el.getparent().getparent().getparent()
-        fndtype.remove(fndtype.Other)
-        add_before(fndtype, [], E.BellyAndWing())
-
-    # Handle HEScore extension for bowstring roof
-    if version == "4.2":
-        for el in root.xpath(
-            "//h:AtticType/h:Other/h:extension/h:BowStringRoof", **xpkw
-        ):
-            atctype = el.getparent().getparent().getparent()
-            atctype.remove(atctype.Other)
-            add_before(atctype, [], E.BowstringRoof())
-
-    # Handle HEScore extension for DuctLocation
-    for el in root.xpath("//h:Ducts/h:extension/h:DuctLocation", **xpkw):
-        value = el.text
-        if value == "manufactured home belly":
-            extension = el.getparent()
-            extension.remove(extension.DuctLocation)
-            ducts = extension.getparent()
-            if ducts.xpath("count(h:extension/*)", **xpkw) == 0:
-                ducts.remove(ducts.extension)
-            add_before(
-                ducts,
-                ["extension", "DuctSurfaceArea", "FractionDuctArea"],
-                E.DuctLocation(value),
             )
 
     # Write out new file

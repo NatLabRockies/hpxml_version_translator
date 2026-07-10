@@ -5,12 +5,10 @@ import pytest
 import tempfile
 
 from hpxml_version_translator.converter import (
-    convert_hpxml_to_3,
     convert_hpxml_to_version,
     convert_hpxml2_to_3,
 )
 from hpxml_version_translator import exceptions as exc
-
 
 hpxml_dir = pathlib.Path(__file__).resolve().parent / "hpxml_v2_files"
 
@@ -42,15 +40,6 @@ def test_attempt_to_use_nonexistent_version():
         match=r"HPXML version 9\.0 is not valid\. Must be one of",
     ):
         convert_hpxml_and_parse(hpxml_dir / "version_change.xml", version="9.0")
-
-
-def test_convert_hpxml_to_3():
-    with tempfile.NamedTemporaryFile("w+b") as f_out:
-        with pytest.deprecated_call():
-            convert_hpxml_to_3(hpxml_dir / "version_change.xml", f_out)
-        f_out.seek(0)
-        root = objectify.parse(f_out).getroot()
-    assert root.attrib["schemaVersion"] == "3.1"
 
 
 def test_mismatch_version():
@@ -948,44 +937,3 @@ def test_multiple_knee_walls():
         wall3.SystemIdentifier.attrib["id"] == attic.AttachedToWall[1].attrib["idref"]
     )
     assert wall3.AtticWallType == "knee wall"
-
-
-def test_hescore_duct_location():
-    root = convert_hpxml_and_parse(hpxml_dir / "hescore_duct_location.xml")
-
-    for i in (0, 1):
-        hvacdist = root.Building[i].BuildingDetails.Systems.HVAC.HVACDistribution
-        duct1 = hvacdist.DistributionSystemType.AirDistribution.Ducts[0]
-        assert duct1.DuctLocation == "roof deck"
-        assert not hasattr(duct1, "extension")
-
-        duct2 = hvacdist.DistributionSystemType.AirDistribution.Ducts[1]
-        assert duct2.DuctLocation == "exterior wall"
-        assert not hasattr(duct2, "extension")
-
-        duct3 = hvacdist.DistributionSystemType.AirDistribution.Ducts[2]
-        assert duct3.DuctLocation == "under slab"
-        assert duct3.extension.SomethingElse == "test"
-
-        duct4 = hvacdist.DistributionSystemType.AirDistribution.Ducts[3]
-        assert duct4.DuctLocation == "garage"
-
-
-def test_hescore_conditioned_attic():
-    root = convert_hpxml_and_parse(hpxml_dir / "hescore_conditioned_attic.xml")
-
-    for i in (0, 1):
-        atc1 = root.Building[i].BuildingDetails.Enclosure.Attics.Attic[0]
-        assert atc1.AtticType.Attic.Conditioned == True
-        assert not hasattr(atc1, "extension")
-
-        atc2 = root.Building[i].BuildingDetails.Enclosure.Attics.Attic[1]
-        assert not hasattr(atc2.AtticType, "Attic")
-
-        atc3 = root.Building[i].BuildingDetails.Enclosure.Attics.Attic[2]
-        assert atc3.AtticType.Attic.Conditioned == False
-        assert not hasattr(atc3, "extension")
-
-        atc4 = root.Building[i].BuildingDetails.Enclosure.Attics.Attic[3]
-        assert atc4.AtticType.Attic.Conditioned == True
-        assert atc4.extension.SomethingElse == "test"

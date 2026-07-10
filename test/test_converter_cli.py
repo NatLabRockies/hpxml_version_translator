@@ -6,7 +6,6 @@ import tempfile
 from hpxml_version_translator import main
 from hpxml_version_translator.converter import get_hpxml_versions
 
-
 hpxml_dir = pathlib.Path(__file__).resolve().parent / "hpxml_v2_files"
 
 
