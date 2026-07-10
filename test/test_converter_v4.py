@@ -102,6 +102,21 @@ def test_solar_tube():
             assert not hasattr(skylight, "SkylightType")
 
 
+def test_cool_roof():
+    root = convert_hpxml_and_parse(hpxml_dir / "cool_roof.xml")
+
+    for i in (0, 1, 2):
+        roof = root.Building[0].BuildingDetails.Enclosure.Roofs.Roof[i]
+        if i == 0:
+            assert not hasattr(roof, "RoofType")
+            assert not hasattr(roof, "CoolRoof")
+        elif i == 1:
+            assert roof.RoofType == "shingles"
+            assert not hasattr(roof, "CoolRoof")
+        elif i == 2:
+            assert roof.CoolRoof == True
+
+
 def test_mismatch_version():
     f_out = io.BytesIO()
     with pytest.raises(

@@ -1803,6 +1803,13 @@ def convert_hpxml4_to_5(
             )
         del skylight.SolarTube
 
+    # Move RoofType="cool roof" to CoolRoof element
+    for el in root.xpath("//h:Roof/h:RoofType", **xpkw):
+        roof = el.getparent()
+        if el.text == "cool roof":
+            add_after(roof, ["RoofType"], E.CoolRoof("true"))
+            del roof.RoofType
+
     # Write out new file
     hpxml5_doc.write(pathobj_to_str(hpxml5_file), pretty_print=True, encoding="utf-8")
     hpxml5_schema.assertValid(hpxml5_doc)
