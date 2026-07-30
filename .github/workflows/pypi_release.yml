@@ -41,8 +41,8 @@ jobs:
     - build
     runs-on: ubuntu-latest
     environment:
-      name: pypi
-      url: https://pypi.org/p/hpxml_version_translator
+      name: pypi_release
+      url: https://pypi.org/p/hpxml-version-translator
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
