@@ -1,0 +1,35 @@
+<HPXML xmlns="http://hpxmlonline.com/2023/09" schemaVersion="4.0">
+    <XMLTransactionHeaderInformation>
+        <XMLType/>
+        <XMLGeneratedBy/>
+        <CreatedDateAndTime>2014-08-21T11:41:49.968796</CreatedDateAndTime>
+        <Transaction>create</Transaction>
+    </XMLTransactionHeaderInformation>
+    <SoftwareInfo/>
+    <Building>
+        <BuildingID id="bldg1"/>
+        <ProjectStatus>
+            <EventType>audit</EventType>
+            <Date>2014-12-02</Date>
+        </ProjectStatus>
+        <BuildingDetails>
+            <Enclosure>
+                <Roofs>
+                    <Roof>
+                        <SystemIdentifier id="roof1"/>
+                    </Roof>
+                    <Roof>
+                        <SystemIdentifier id="roof2"/>
+                        <RoofType>shingles</RoofType>
+                        <SolarAbsorptance>0.5</SolarAbsorptance>
+                    </Roof>
+                    <Roof>
+                        <SystemIdentifier id="roof3"/>
+                        <RoofType>cool roof</RoofType>
+                        <SolarAbsorptance>0.1</SolarAbsorptance>
+                    </Roof>
+                </Roofs>
+            </Enclosure>
+        </BuildingDetails>
+    </Building>
+</HPXML>

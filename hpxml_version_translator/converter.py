@@ -129,6 +129,7 @@ def convert_hpxml_to_version(
         1: convert_hpxml1_to_2,
         2: convert_hpxml2_to_3,
         3: convert_hpxml3_to_4,
+        4: convert_hpxml4_to_5,
     }
     current_file = hpxml_file
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -160,7 +161,7 @@ def convert_hpxml1_to_2(
 
     if version not in get_hpxml_versions(major_version=2):
         raise exc.HpxmlTranslationError(
-            "convert_hpxml1_to_2 must have valid target version of 2.x, got {version}."
+            f"convert_hpxml1_to_2 must have valid target version of 2.x, got {version}."
         )
 
     # Load Schemas
@@ -248,7 +249,7 @@ def convert_hpxml2_to_3(
 
     if version not in get_hpxml_versions(major_version=3):
         raise exc.HpxmlTranslationError(
-            "convert_hpxml2_to_3 must have valid target version of 3.x, got {version}."
+            f"convert_hpxml2_to_3 must have valid target version of 3.x, got {version}."
         )
 
     # Load Schemas
@@ -1383,7 +1384,7 @@ def convert_hpxml3_to_4(
     """
     if version not in get_hpxml_versions(major_version=4):
         raise exc.HpxmlTranslationError(
-            "convert_hpxml3_to_4 must have valid target version of 4.x, got {version}."
+            f"convert_hpxml3_to_4 must have valid target version of 4.x, got {version}."
         )
 
     # Load Schemas
@@ -1700,3 +1701,115 @@ def convert_hpxml3_to_4(
     # Write out new file
     hpxml4_doc.write(pathobj_to_str(hpxml4_file), pretty_print=True, encoding="utf-8")
     hpxml4_schema.assertValid(hpxml4_doc)
+
+
+def convert_hpxml4_to_5(
+    hpxml4_file: File, hpxml5_file: File, version: str = "5.0"
+) -> None:
+    """Convert an HPXML v4 file to HPXML v5
+
+    :param hpxml4_file: HPXML v4 input file
+    :type hpxml4_file: pathlib.Path, str, or file-like
+    :param hpxml5_file: HPXML v5 output file
+    :type hpxml5_file: pathlib.Path, str, or file-like
+    """
+    if version not in get_hpxml_versions(major_version=5):
+        raise exc.HpxmlTranslationError(
+            f"convert_hpxml4_to_5 must have valid target version of 5.x, got {version}."
+        )
+
+    # Load Schemas
+    schemas_dir = pathlib.Path(__file__).resolve().parent / "schemas"
+    hpxml4_schema_doc = etree.parse(str(schemas_dir / "v4.2" / "HPXML.xsd"))
+    hpxml4_ns = hpxml4_schema_doc.getroot().attrib["targetNamespace"]
+    hpxml4_schema = etree.XMLSchema(hpxml4_schema_doc)
+    hpxml5_schema_doc = etree.parse(str(schemas_dir / "v5.0" / "HPXML.xsd"))
+    hpxml5_ns = hpxml5_schema_doc.getroot().attrib["targetNamespace"]
+    hpxml5_schema = etree.XMLSchema(hpxml5_schema_doc)
+
+    E = objectify.ElementMaker(
+        namespace=hpxml5_ns, nsmap={None: hpxml5_ns}, annotate=False
+    )
+    xpkw = {"namespaces": {"h": hpxml5_ns}}
+
+    # Ensure we're working with valid HPXML v4.x
+    hpxml4_doc = objectify.parse(pathobj_to_str(hpxml4_file))
+    hpxml4_schema.assertValid(hpxml4_doc)
+
+    # Change the namespace of every element to use the HPXML v5 namespace
+    # https://stackoverflow.com/a/51660868/11600307
+    change_ns_xslt = etree.parse(
+        str(pathlib.Path(__file__).resolve().parent / "change_namespace.xsl")
+    )
+    hpxml5_doc = hpxml4_doc.xslt(
+        change_ns_xslt, orig_namespace=f"'{hpxml4_ns}'", new_namespace=f"'{hpxml5_ns}'"
+    )
+    root = hpxml5_doc.getroot()
+
+    # Change version
+    root.attrib["schemaVersion"] = version
+
+    # Convert none to not present
+    # https://github.com/hpxmlwg/hpxml/pull/451
+    for el in root.xpath(
+        "//h:InteriorShading/h:Type | //h:ExteriorShading/h:Type", **xpkw
+    ):
+        if el.text == "none":
+            el._setText("not present")
+    for el in root.xpath(
+        "//h:Wall/h:Siding | //h:Wall/h:InteriorFinish/h:Type", **xpkw
+    ):
+        if el.text == "none":
+            el._setText("not present")
+    for el in root.xpath("//h:Floor/h:FloorCovering", **xpkw):
+        if el.text == "none":
+            el._setText("not present")
+    for el in root.xpath("//h:BellyAndWing/h:BellyWrapCondition", **xpkw):
+        if el.text == "none":
+            el._setText("not present")
+    for el in root.xpath("//h:Pool/h:Type | //h:PermanentSpa/h:Type", **xpkw):
+        if el.text == "none":
+            el._setText("not present")
+    for el in root.xpath(
+        "//h:FilterType | //h:Pump/h:Type | //h:Cleaner/h:Type | //h:Heater/h:Type",
+        **xpkw,
+    ):
+        if el.text == "none":
+            el._setText("not present")
+    for el in root.xpath("//h:InsulationMaterial/h:None", **xpkw):
+        el.tag = f"{{{hpxml5_ns}}}NotPresent"
+
+    # Convert refrigerator type uncategorized to other
+    # https://github.com/hpxmlwg/hpxml/pull/451
+    for el in root.xpath("//h:Refrigerator/h:Type", **xpkw):
+        if el.text == "uncategorized":
+            el._setText("other")
+
+    # Convert Skylight/SolarTube to Skylight/Type
+    # https://github.com/hpxmlwg/hpxml/pull/451
+    for el in root.xpath("//h:Skylight/h:SolarTube", **xpkw):
+        skylight = el.getparent()
+        if el.text is None or el.text.lower() in ("true", "1"):
+            add_before(
+                skylight,
+                [
+                    "Pitch",
+                    "AttachedToRoof",
+                    "AttachedToFloor",
+                    "AnnualEnergyUse",
+                    "extension",
+                ],
+                E.SkylightType("tubular"),
+            )
+        del skylight.SolarTube
+
+    # Move RoofType="cool roof" to CoolRoof element
+    for el in root.xpath("//h:Roof/h:RoofType", **xpkw):
+        roof = el.getparent()
+        if el.text == "cool roof":
+            add_after(roof, ["RoofType"], E.CoolRoof("true"))
+            del roof.RoofType
+
+    # Write out new file
+    hpxml5_doc.write(pathobj_to_str(hpxml5_file), pretty_print=True, encoding="utf-8")
+    hpxml5_schema.assertValid(hpxml5_doc)
