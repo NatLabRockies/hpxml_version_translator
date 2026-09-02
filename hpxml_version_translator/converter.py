@@ -161,7 +161,7 @@ def convert_hpxml1_to_2(
 
     if version not in get_hpxml_versions(major_version=2):
         raise exc.HpxmlTranslationError(
-            "convert_hpxml1_to_2 must have valid target version of 2.x, got {version}."
+            f"convert_hpxml1_to_2 must have valid target version of 2.x, got {version}."
         )
 
     # Load Schemas
@@ -249,7 +249,7 @@ def convert_hpxml2_to_3(
 
     if version not in get_hpxml_versions(major_version=3):
         raise exc.HpxmlTranslationError(
-            "convert_hpxml2_to_3 must have valid target version of 3.x, got {version}."
+            f"convert_hpxml2_to_3 must have valid target version of 3.x, got {version}."
         )
 
     # Load Schemas
@@ -1384,7 +1384,7 @@ def convert_hpxml3_to_4(
     """
     if version not in get_hpxml_versions(major_version=4):
         raise exc.HpxmlTranslationError(
-            "convert_hpxml3_to_4 must have valid target version of 4.x, got {version}."
+            f"convert_hpxml3_to_4 must have valid target version of 4.x, got {version}."
         )
 
     # Load Schemas
@@ -1715,7 +1715,7 @@ def convert_hpxml4_to_5(
     """
     if version not in get_hpxml_versions(major_version=5):
         raise exc.HpxmlTranslationError(
-            "convert_hpxml4_to_5 must have valid target version of 5.x, got {version}."
+            f"convert_hpxml4_to_5 must have valid target version of 5.x, got {version}."
         )
 
     # Load Schemas

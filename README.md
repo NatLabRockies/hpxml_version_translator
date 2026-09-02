@@ -29,7 +29,7 @@ pip install -e ".[dev]"
 
 ```
 hpxml_version_translator -h
-usage: hpxml_version_translator [-h] [-o OUTPUT] [-v {2.0,2.1,2.2,2.2.1,2.3,3.0,3.1,4.0,4.1,4.2}] hpxml_input
+usage: hpxml_version_translator [-h] [-o OUTPUT] [-v {2.0,2.1,2.2,2.2.1,2.3,3.0,3.1,4.0,4.1,4.2,5.0}] hpxml_input
 
 HPXML Version Translator, convert an HPXML file to a newer version
 
@@ -40,8 +40,8 @@ options:
   -h, --help            show this help message and exit
   -o OUTPUT, --output OUTPUT
                         Filename of output HPXML file. If not provided, will go to stdout
-  -v {2.0,2.1,2.2,2.2.1,2.3,3.0,3.1,4.0,4.1,4.2}, --to_hpxml_version {2.0,2.1,2.2,2.2.1,2.3,3.0,3.1,4.0,4.1,4.2}
-                        Version of HPXML to translate to, default: 4.2
+  -v {2.0,2.1,2.2,2.2.1,2.3,3.0,3.1,4.0,4.1,4.2,5.0}, --to_hpxml_version {2.0,2.1,2.2,2.2.1,2.3,3.0,3.1,4.0,4.1,4.2,5.0}
+                        Version of HPXML to translate to, default: 5.0
 ```
 
 ### In a Python script
@@ -49,7 +49,7 @@ options:
 ```python
 from hpxml_version_translator import convert_hpxml_to_version
 
-convert_hpxml_to_version("4.2", "path/to/in.xml", "path/to/out.xml")
+convert_hpxml_to_version("5.0", "path/to/in.xml", "path/to/out.xml")
 ```
 
 It also works with path-like objects and binary file-like objects.

@@ -21,7 +21,7 @@ def convert_hpxml_and_parse(input_filename, version="5.0"):
     return root
 
 
-def test_version_change_to_4():
+def test_version_change_to_5():
     root = convert_hpxml_and_parse(hpxml_dir / "version_change.xml")
     assert root.attrib["schemaVersion"] == "5.0"
 
@@ -54,13 +54,19 @@ def test_not_present():
         skylight = root.Building[0].BuildingDetails.Enclosure.Skylights.Skylight[i]
         if i == 0:
             assert window.ExteriorShading.Type == "not present"
+            assert window.InteriorShading.Type == "not present"
             assert skylight.ExteriorShading.Type == "not present"
+            assert skylight.InteriorShading.Type == "not present"
         elif i == 1:
+            assert window.ExteriorShading.Type != "not present"
             assert window.InteriorShading.Type != "not present"
+            assert skylight.ExteriorShading.Type != "not present"
             assert skylight.InteriorShading.Type != "not present"
         else:
-            assert not hasattr(window, "Type")
-            assert not hasattr(skylight, "Type")
+            assert not hasattr(window, "ExteriorShading")
+            assert not hasattr(window, "InteriorShading")
+            assert not hasattr(skylight, "ExteriorShading")
+            assert not hasattr(skylight, "InteriorShading")
 
     for i in (0, 1):
         pool = root.Building[0].BuildingDetails.Pools.Pool[i]
