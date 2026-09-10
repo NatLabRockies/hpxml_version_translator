@@ -66,6 +66,23 @@
                         </Insulation>
                     </Roof>
                 </Roofs>
+                <RimJoists>
+                    <RimJoist>
+                        <SystemIdentifier id="rimjoist1"/>
+                        <ExteriorAdjacentTo>outside</ExteriorAdjacentTo>
+                        <InteriorAdjacentTo>living space</InteriorAdjacentTo>
+                        <Siding>none</Siding>
+                        <Insulation>
+                            <SystemIdentifier id="rimjoist1ins"/>
+                            <Layer>
+                                <InsulationMaterial>
+                                    <None/>
+                                </InsulationMaterial>
+                                <NominalRValue>0</NominalRValue>
+                            </Layer>
+                        </Insulation>
+                    </RimJoist>
+                </RimJoists>
                 <Walls>
                     <Wall>
                         <SystemIdentifier id="wall1"/>
@@ -180,6 +197,39 @@
                         </Insulation>
                     </Floor>
                 </Floors>
+                <Slabs>
+                    <Slab>
+                        <SystemIdentifier id="slab1"/>
+                        <FloorCovering>none</FloorCovering>
+                        <PerimeterInsulation>
+                            <SystemIdentifier id="slab1perins"/>
+                            <Layer>
+                                <InsulationMaterial>
+                                    <None/>
+                                </InsulationMaterial>
+                                <NominalRValue>0</NominalRValue>
+                            </Layer>
+                        </PerimeterInsulation>
+                        <ExteriorHorizontalInsulation>
+                            <SystemIdentifier id="slab1exthins"/>
+                            <Layer>
+                                <InsulationMaterial>
+                                    <None/>
+                                </InsulationMaterial>
+                                <NominalRValue>0</NominalRValue>
+                            </Layer>
+                        </ExteriorHorizontalInsulation>
+                        <UnderSlabInsulation>
+                            <SystemIdentifier id="slab1undins"/>
+                            <Layer>
+                                <InsulationMaterial>
+                                    <None/>
+                                </InsulationMaterial>
+                                <NominalRValue>0</NominalRValue>
+                            </Layer>
+                        </UnderSlabInsulation>
+                    </Slab>
+                </Slabs>
                 <Windows>
                     <Window>
                         <SystemIdentifier id="window1"/>
