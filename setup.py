@@ -6,8 +6,8 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setuptools.setup(
     name="hpxml_version_translator",
-    version="3.0.0",
-    author="Ben Park (NLR), Noel Merket (Pearl), Scott Horowitz (NLR)",
+    version="3.0.1",
+    author="Ben Park (NLR), Noel Merket (Pearl), Scott Horowitz (NLR), Yueyue Zhou (NLR)",
     author_email="ben.park@nlr.gov",
     description="Convert HPXML to newer version",
     long_description=long_description,
