@@ -51,6 +51,9 @@
                         <SystemIdentifier id="roof1"/>
                         <RoofType>asphalt or fiberglass shingles</RoofType>
                         <RoofColor>medium</RoofColor>
+                        <InteriorFinish>
+                            <Type>none</Type>
+                        </InteriorFinish>
                         <RadiantBarrier>false</RadiantBarrier>
                         <Insulation>
                             <SystemIdentifier id="attic1roofins"/>
@@ -78,8 +81,10 @@
                         <Insulation>
                             <SystemIdentifier id="wall1ins"/>
                             <Layer>
-                                <InstallationType>cavity</InstallationType>
-                                <NominalRValue>11</NominalRValue>
+                                <InsulationMaterial>
+                                    <None/>
+                                </InsulationMaterial>
+                                <NominalRValue>0</NominalRValue>
                             </Layer>
                         </Insulation>
                     </Wall>
@@ -97,17 +102,42 @@
                         <Insulation>
                             <SystemIdentifier id="wall2ins"/>
                             <Layer>
-                                <InstallationType>cavity</InstallationType>
-                                <NominalRValue>11</NominalRValue>
+                                <InsulationMaterial>
+                                    <None/>
+                                </InsulationMaterial>
+                                <NominalRValue>0</NominalRValue>
                             </Layer>
                         </Insulation>
                     </Wall>
                 </Walls>
+                <FoundationWalls>
+                    <FoundationWall>
+                        <SystemIdentifier id="foundationwall1"/>
+                        <ExteriorAdjacentTo>ground</ExteriorAdjacentTo>
+                        <InteriorAdjacentTo>living space</InteriorAdjacentTo>
+                        <Type>concrete block</Type>
+                        <InteriorFinish>
+                            <Type>none</Type>
+                        </InteriorFinish>
+                        <Insulation>
+                            <SystemIdentifier id="foundationwall1ins"/>
+                            <Layer>
+                                <InsulationMaterial>
+                                    <None/>
+                                </InsulationMaterial>
+                                <NominalRValue>0</NominalRValue>
+                            </Layer>
+                        </Insulation>
+                    </FoundationWall>
+                </FoundationWalls>
                 <Floors>
                     <Floor>
                         <SystemIdentifier id="framefloor1"/>
                         <FloorCovering>none</FloorCovering>
                         <Area>1200</Area>
+                        <InteriorFinish>
+                            <Type>none</Type>
+                        </InteriorFinish>
                         <Insulation>
                             <SystemIdentifier id="attic1flrins"/>
                             <Layer>
@@ -119,6 +149,9 @@
                         <SystemIdentifier id="framefloor2"/>
                         <FloorCovering>none</FloorCovering>
                         <Area>1200</Area>
+                        <InteriorFinish>
+                            <Type>none</Type>
+                        </InteriorFinish>
                         <Insulation>
                             <SystemIdentifier id="belly1flrins"/>
                             <Layer>
@@ -133,6 +166,9 @@
                         <SystemIdentifier id="framefloor3"/>
                         <FloorCovering>none</FloorCovering>
                         <Area>1200</Area>
+                        <InteriorFinish>
+                            <Type>none</Type>
+                        </InteriorFinish>
                         <Insulation>
                             <SystemIdentifier id="belly2flrins"/>
                             <Layer>
@@ -199,6 +235,23 @@
                     </Skylight>
                 </Skylights>
             </Enclosure>
+            <Systems>
+                <HVAC>
+                    <HVACDistribution>
+                        <SystemIdentifier id="hvac_dist1"/>
+                        <DistributionSystemType>
+                            <AirDistribution>
+                                <Ducts>
+                                    <SystemIdentifier id="duct1"/>
+                                    <DuctInsulationMaterial>
+                                        <None/>
+                                    </DuctInsulationMaterial>
+                                </Ducts>
+                            </AirDistribution>
+                        </DistributionSystemType>
+                    </HVACDistribution>
+                </HVAC>
+            </Systems>
             <Pools>
                 <Pool>
                     <SystemIdentifier id="pool1"/>

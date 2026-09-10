@@ -36,15 +36,24 @@ def test_not_present():
     roof = root.Building[0].BuildingDetails.Enclosure.Roofs.Roof
     roof_ins_mat = roof.Insulation.Layer.InsulationMaterial
     assert hasattr(roof_ins_mat, "NotPresent")
+    assert roof.InteriorFinish.Type == "not present"
 
     for i in (0, 1):
         wall = root.Building[0].BuildingDetails.Enclosure.Walls.Wall[i]
         assert wall.Siding == "not present"
         assert wall.InteriorFinish.Type == "not present"
+        wall_ins_mat = wall.Insulation.Layer.InsulationMaterial
+        assert hasattr(wall_ins_mat, "NotPresent")
+
+    foundation_wall = root.Building[0].BuildingDetails.Enclosure.FoundationWalls.FoundationWall
+    foundation_wall_ins_mat = foundation_wall.Insulation.Layer.InsulationMaterial
+    assert hasattr(foundation_wall_ins_mat, "NotPresent")
+    assert foundation_wall.InteriorFinish.Type == "not present"
 
     for i in (0, 1, 2):
         floor = root.Building[0].BuildingDetails.Enclosure.Floors.Floor[i]
         assert floor.FloorCovering == "not present"
+        assert floor.InteriorFinish.Type == "not present"
         if i > 0:
             floor_ins_mat = floor.Insulation.Layer.InsulationMaterial
             assert hasattr(floor_ins_mat, "NotPresent")
@@ -67,6 +76,13 @@ def test_not_present():
             assert not hasattr(window, "InteriorShading")
             assert not hasattr(skylight, "ExteriorShading")
             assert not hasattr(skylight, "InteriorShading")
+
+    duct_ins_mat = (
+        root.Building[0]
+        .BuildingDetails.Systems.HVAC.HVACDistribution
+        .DistributionSystemType.AirDistribution.Ducts.DuctInsulationMaterial
+    )
+    assert hasattr(duct_ins_mat, "NotPresent")
 
     for i in (0, 1):
         pool = root.Building[0].BuildingDetails.Pools.Pool[i]
