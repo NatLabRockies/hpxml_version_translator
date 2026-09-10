@@ -45,7 +45,9 @@ def test_not_present():
         wall_ins_mat = wall.Insulation.Layer.InsulationMaterial
         assert hasattr(wall_ins_mat, "NotPresent")
 
-    foundation_wall = root.Building[0].BuildingDetails.Enclosure.FoundationWalls.FoundationWall
+    foundation_wall = root.Building[
+        0
+    ].BuildingDetails.Enclosure.FoundationWalls.FoundationWall
     foundation_wall_ins_mat = foundation_wall.Insulation.Layer.InsulationMaterial
     assert hasattr(foundation_wall_ins_mat, "NotPresent")
     assert foundation_wall.InteriorFinish.Type == "not present"
@@ -77,11 +79,9 @@ def test_not_present():
             assert not hasattr(skylight, "ExteriorShading")
             assert not hasattr(skylight, "InteriorShading")
 
-    duct_ins_mat = (
-        root.Building[0]
-        .BuildingDetails.Systems.HVAC.HVACDistribution
-        .DistributionSystemType.AirDistribution.Ducts.DuctInsulationMaterial
-    )
+    duct_ins_mat = root.Building[
+        0
+    ].BuildingDetails.Systems.HVAC.HVACDistribution.DistributionSystemType.AirDistribution.Ducts.DuctInsulationMaterial
     assert hasattr(duct_ins_mat, "NotPresent")
 
     for i in (0, 1):
