@@ -1756,12 +1756,10 @@ def convert_hpxml4_to_5(
     ):
         if el.text == "none":
             el._setText("not present")
-    for el in root.xpath(
-        "//h:Wall/h:Siding | //h:Wall/h:InteriorFinish/h:Type", **xpkw
-    ):
+    for el in root.xpath("//h:Siding | //h:InteriorFinish/h:Type", **xpkw):
         if el.text == "none":
             el._setText("not present")
-    for el in root.xpath("//h:Floor/h:FloorCovering", **xpkw):
+    for el in root.xpath("//h:FloorCovering", **xpkw):
         if el.text == "none":
             el._setText("not present")
     for el in root.xpath("//h:BellyAndWing/h:BellyWrapCondition", **xpkw):
@@ -1776,7 +1774,9 @@ def convert_hpxml4_to_5(
     ):
         if el.text == "none":
             el._setText("not present")
-    for el in root.xpath("//h:InsulationMaterial/h:None", **xpkw):
+    for el in root.xpath(
+        "//h:InsulationMaterial/h:None | //h:DuctInsulationMaterial/h:None", **xpkw
+    ):
         el.tag = f"{{{hpxml5_ns}}}NotPresent"
 
     # Convert refrigerator type uncategorized to other
